@@ -39,7 +39,7 @@ class _FoodCardsState extends State<FoodCards> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 0.55.sh,
+      height: 0.54.sh,
       child: ListView.separated(
         padding: EdgeInsets.only(right: 0.25.sw),
           physics: const BouncingScrollPhysics(),
@@ -83,8 +83,8 @@ class _BuildFoodCard extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: (1.sw >= 600) ? 0.20.sw : 0.25.sw,
                 maxWidth: (1.sw >= 600) ? 0.26.sw : 0.45.sw,
-                minHeight: (1.sw >= 600) ? 0.65.sh:0.55.sh,
-                maxHeight: (1.sw >= 600) ? 0.75.sh:0.55.sh
+                minHeight: (1.sw >= 600) ? 0.65.sh:0.54.sh,
+                maxHeight: (1.sw >= 600) ? 0.75.sh:0.54.sh
             ),
             child: LayoutBuilder(
               builder: (_, size) {
@@ -122,160 +122,65 @@ class _BuildFoodCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 AnimatedSize(
-                                  duration: Duration(milliseconds: 350),
+                                  duration: const Duration(milliseconds: 350),
                                   child: SizedBox(
                                     height: startAnim?height*0.16:height*0.21,
                                   ),
                                 ),
 
-                                Flexible(
-                                  child: AutoSizeText(
-                                    foodModel.name,
-                                    style: getBoldTextStyle(
-                                        color: AppColors.backgroundColor,
-                                        fontSize: 20
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    minFontSize: 0,
-                                  ),
+                                _BuildFoodName(
+                                  width:width,
+                                  height:height,
+                                  foodName:foodModel.name
                                 ),
 
                                 AnimatedSize(
-                                  duration: Duration(milliseconds: 350),
+                                  duration: const Duration(milliseconds: 350),
                                   child: SizedBox(
                                     height: startAnim?height*0.02:height*0.02,
                                   ),
                                 ),
                                // SizedBox(height: 16.h,),
 
-                                Flexible(
-                                  child: AnimatedOpacity(
-                                    opacity: startAnim ? 1 : 0,
-                                    duration: const Duration(milliseconds: 450),
-
-                                    child: AnimatedSize(
-                                      duration: const Duration(milliseconds: 450),
-                                      alignment: Alignment.topLeft,
-                                      curve: Curves.decelerate,
-
-                                      child: SizedBox(
-                                        height: startAnim ?height*0.11:0,
-
-                                        child: AutoSizeText(
-                                          foodModel.description,
-                                          style: getRegularTextStyle(
-                                              color: AppColors.backgroundColor,
-                                              fontSize: 12
-                                          ),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          minFontSize: 0,
-
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                _BuildFoodDescription(
+                                    width:width,
+                                    height:height,
+                                    foodDescription:foodModel.description,
+                                    startAnim:startAnim
                                 ),
 
                                 SizedBox(height: 2.h,),
 
-                                Flexible(
-                                  child: AutoSizeText(
-                                    "\$${foodModel.price.toStringAsFixed(2)}",
-                                    style: getBoldTextStyle(
-                                      color: AppColors.backgroundColor,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.fade,
-                                    minFontSize: 0,
-                                  ),
+                                _BuildFoodPrice(
+                                    width:width,
+                                    height:height,
+                                    foodPrice:foodModel.price,
+                                    startAnim:startAnim
                                 ),
 
                                 Spacer(flex: 1,),
 
-                                Flexible(
-                                  child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: ElevatedButton(
-                                      onPressed: (){
-
-                                      },
-                                      style: getBorderedButtonStyle(
-                                        maxSize: Size(width*0.55,height*0.12),
-                                        minSize: Size(width*0.1,height*0.12)
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(width: 2.w,),
-
-                                          Expanded(
-                                            child: FittedBox(
-                                                child: Icon(
-                                                  AppIcons.cart,
-                                                  color: AppColors.black,
-                                                )
-                                            ),
-                                          ),
-
-                                          SizedBox(width: 5.w,),
-
-                                          Expanded(
-                                            flex: 3,
-                                            child: FittedBox(
-                                              child: Text(
-                                                "Add To Bag",
-                                                style: getBoldTextStyle(color: AppColors.semiBlack),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-
-                                          SizedBox(
-                                            width: 4.w,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 5.h,)
                               ],
                             ),
 
                           )
                     ),
 
-                    AnimatedPositioned(
-                        duration: Duration(milliseconds: 200),
-                        top: startAnim?0:height*0.06,
-                        height: height * 0.32,
-                        width: width*0.82,
-                        child:AnimatedSlide(
-                          duration: const Duration(milliseconds: 350),
-                          curve: Curves.decelerate,
-                          offset: Offset(0,startAnim?-height*0.0002:height*0.0001),
-                          child: StreamBuilder<double>(
-                            stream: foodCardAnimationHandler.plateAnimationOutput,
-                            initialData: 0,
-                            builder: (context, snapshot) {
-                              return AnimatedRotation(
-                                curve: Curves.decelerate,
-                                duration: const Duration(milliseconds: 400),
-                                turns:snapshot.data ?? 0,
-                                child: Image.asset(
-                                  foodModel.image,
-                                  fit: BoxFit.contain,
-                                  alignment: Alignment.center,
-                                ),
-                              );
-                            },
-
-                          ),
-                        )
+                    _BuildPlate(
+                        height: height,
+                        width: width,
+                        foodCardAnimationHandler:foodCardAnimationHandler,
+                        isStartAnim : startAnim,
+                        foodModel: foodModel,
                     ),
+
+                    _AddToBagButton(
+                      height: height,
+                      width: width,
+                      startAnim: startAnim,
+                      foodCardAnimationHandler:foodCardAnimationHandler
+                    ),
+
                   ],
                 );
               },
@@ -283,6 +188,227 @@ class _BuildFoodCard extends StatelessWidget {
             ),
           );
         }
+    );
+  }
+}
+
+class _BuildFoodPrice extends StatelessWidget {
+  final double width;
+  final double height;
+  final double foodPrice;
+  final bool startAnim;
+  const _BuildFoodPrice({Key? key, required this.width, required this.height, required this.foodPrice,required this.startAnim}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 450),
+        alignment: Alignment.topLeft,
+        curve: Curves.decelerate,
+
+        child: SizedBox(
+          width: width,
+          height: startAnim ?height*0.075:0,
+          child: FittedBox(
+            child: SizedBox(
+              width: width,
+
+              child: Text(
+                "\$${foodPrice.toStringAsFixed(2)}",
+                style: getBoldTextStyle(
+                  color: AppColors.backgroundColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class _BuildFoodDescription extends StatelessWidget {
+  final double width;
+  final double height;
+  final String foodDescription;
+  final bool startAnim;
+  const _BuildFoodDescription({Key? key, required this.width, required this.height, required this.foodDescription,required this.startAnim}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: AnimatedOpacity(
+        opacity: startAnim ? 1 : 0,
+        duration: const Duration(milliseconds: 450),
+
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 450),
+          alignment: Alignment.topLeft,
+          curve: Curves.decelerate,
+
+          child: SizedBox(
+            width: width,
+            height: startAnim ?height*0.11:0,
+
+            child: FittedBox(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: width,
+
+                child: Text(
+                  foodDescription,
+                  style: getRegularTextStyle(
+                      color: AppColors.backgroundColor,
+                      fontSize: 12
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  //minFontSize: 0,
+
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BuildFoodName extends StatelessWidget {
+  final double width;
+  final double height;
+  final String foodName;
+  const _BuildFoodName({Key? key, required this.width, required this.height, required this.foodName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height*0.11,
+      child: FittedBox(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: width,
+          child: Text(
+            foodName,
+            style: getBoldTextStyle(
+                color: AppColors.backgroundColor,
+                fontSize: 20
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            // minFontSize: 0,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class _BuildPlate extends StatelessWidget {
+  final double width;
+  final double height;
+  final FoodCardAnimationHandler foodCardAnimationHandler ;
+  final bool isStartAnim;
+  final FoodModel foodModel;
+  const _BuildPlate({Key? key, required this.width, required this.height, required this.foodCardAnimationHandler, required this.isStartAnim, required this.foodModel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+        duration: Duration(milliseconds: 200),
+        top: isStartAnim?0:height*0.06,
+        height: height * 0.32,
+        width: width*0.82,
+        child:AnimatedSlide(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.decelerate,
+          offset: Offset(0,isStartAnim?-height*0.0002:height*0.0001),
+          child: StreamBuilder<double>(
+            stream: foodCardAnimationHandler.plateAnimationOutput,
+            initialData: 0,
+            builder: (context, snapshot) {
+              return AnimatedRotation(
+                curve: Curves.decelerate,
+                duration: const Duration(milliseconds: 400),
+                turns:snapshot.data ?? 0,
+                child: Image.asset(
+                  foodModel.image,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                ),
+              );
+            },
+
+          ),
+        )
+    );
+  }
+}
+
+class _AddToBagButton extends StatelessWidget {
+  final double width;
+  final double height;
+  final bool startAnim;
+  final FoodCardAnimationHandler foodCardAnimationHandler ;
+  const _AddToBagButton({Key? key, required this.width, required this.height, required this.foodCardAnimationHandler, required this.startAnim}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.decelerate,
+      bottom: startAnim?height*0.18:height*0.26,
+      right:startAnim? width*0.05:width*0.12,
+      width: width*0.55,
+      height: height*0.1,
+      child: ElevatedButton(
+        onPressed: (){
+         //todo: add to bag
+        },
+        style: getBorderedButtonStyle(
+            maxSize: Size(width*0.55,height*0.12),
+            minSize: Size(width*0.1,height*0.12)
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(width: 2.w,),
+
+            const Expanded(
+              child: FittedBox(
+                  child: Icon(
+                    AppIcons.cart,
+                    color: AppColors.black,
+                  )
+              ),
+            ),
+
+            SizedBox(width: 5.w,),
+
+            Expanded(
+              flex: 3,
+              child: FittedBox(
+                child: Text(
+                  "Add To Bag",
+                  style: getBoldTextStyle(color: AppColors.semiBlack),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+
+            SizedBox(
+              width: 4.w,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
